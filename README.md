@@ -37,15 +37,15 @@ To run these commands, you need gnu make OS package.
    * disable demo mode
    * suppress nag dialogs
    * insert activation key if needed
-    test that OBD connection works
+   * test that OBD connection works
  * when happy with all changes, close the program
 
 
 ### Daily usage
 **`make run`**
  * run forscan
- * any changes within program are not persisted between sessions unless you save them inside FORScan directory
  * the *shared* directory is accessible inside container as /home/forscan/FORScan
+ * any changes within program are not persisted between sessions unless you save them inside FORScan directory
  * use this directory for storing persistent logs, license key etc between linux and wine
 
 Everything else within the container is not persisted between runs!
