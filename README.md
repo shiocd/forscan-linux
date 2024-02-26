@@ -18,7 +18,8 @@ Docker to the rescue!
 1) make sure your user is member of the dialout group, for OBD adapter access
 2) plug in the OBD adapter, check that it shows up in dmesg/lsusb/dev (as /dev/ttyUSB0)
 3) install docker and ensure your user can run docker, user has to be member of the docker group
-
+4) if you need to override the OBD device, you can do it via ENV like so:
+   `DEVICE=/dev/null make ...`
 
 ### Installation
 To run these commands, you need gnu make OS package.
@@ -26,7 +27,7 @@ To run these commands, you need gnu make OS package.
 **`make build`**
  * builds the base ubuntu 22.04 wine32 image
  * it takes a while depending on network speed etc
- * in the end you should see a output:
+ * in the end you should see output:
    `Successfully tagged forscan:latest`
 
 **`make init`**
@@ -58,7 +59,7 @@ Everything else within the container is not persisted between runs!
 
 
 ### Notes
-The process will download approx 200 MB of stuff, mostly OS packages.
+The docker process will download approx 200 MB of stuff.
 Final docker image size is around 1.5 GB.
 
 

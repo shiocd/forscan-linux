@@ -5,8 +5,10 @@ $(shell ./xauth.sh)
 # get exited container id for commit
 CID=$(shell docker ps -a -f ancestor=forscan -f status=exited -q | head -1)
 
-# OBD device
+# OBD device unless defined by ENV
+ifndef DEVICE
 DEVICE=/dev/ttyUSB0
+endif
 
 all:
 	@echo "Use one of the targets: clean build init config run"
