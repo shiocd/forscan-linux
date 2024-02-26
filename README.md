@@ -1,3 +1,5 @@
+![image](https://github.com/shiocd/forscan-linux/assets/664928/5aa788ac-2c86-4268-8869-70b1ffd9c658)
+
 ### WHAT IS THIS THING ?
 A way to run the 32-bit forscan windows software (forscan.org) in x86-64 linux env.
 
