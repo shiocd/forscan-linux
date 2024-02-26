@@ -18,7 +18,6 @@ build:
 	docker build -t forscan .
 
 init:
-	@mkdir shared
 	@docker run -e DISPLAY --device $(DEVICE) -v $(shell pwd)/init.sh:/home/forscan/exec.sh --net=host forscan
 	make commit
 
