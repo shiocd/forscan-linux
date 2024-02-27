@@ -39,6 +39,7 @@ ifneq ("$(wildcard $(DEVICE))","")
 else
 	@echo $(MSG)
 	@docker run --device $(NO_DEVICE) -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
+	make commit
 endif
 
 run:
