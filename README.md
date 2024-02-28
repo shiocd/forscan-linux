@@ -65,6 +65,11 @@ The docker process will download approx 200 MB of stuff.
 Final docker image size is around 1.5 GB.
 
 
+### Demo images
+![image](https://github.com/shiocd/forscan-linux/assets/664928/19396343-49fe-4201-9335-f5755f2d028a "Access vehicle, module list")
+![image](https://github.com/shiocd/forscan-linux/assets/664928/c5662fd0-2bbe-41df-9b7d-70011b8e31ee "DTC list")
+
+
 ## DISCLAIMER
 * No warranty, no support, no nothing.
 * It works for me, it might work for you.
