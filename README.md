@@ -53,6 +53,9 @@ To run these commands, you need gnu make OS package.
 
 Everything else in the container is not saved between runs!
 
+**`make update`**
+ * fetch latest forscan release and update image
+
 **`make config`**
  * run this if you ever need to make configuration changes that persist between runs
 

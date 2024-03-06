@@ -16,31 +16,34 @@ NO_DEVICE=/dev/null
 MSG="WARN: device $(DEVICE) does not exist, using $(NO_DEVICE) as dummy device"
 
 all:
-	@echo "Use one of the targets: clean build init config run"
+	@echo "Use one of the targets: clean build init config run update"
 	@echo
 
 build:
 	docker build -t forscan .
 
+fetch:
+	@docker run -e DISPLAY --device $(DEVICE) -v $(shell pwd)/fetch.sh:/home/forscan/exec.sh --net=host forscan
+	make commit
+
 init:
+	make fetch
 ifneq ("$(wildcard $(DEVICE))","")
 	@docker run -e DISPLAY --device $(DEVICE) -v $(shell pwd)/init.sh:/home/forscan/exec.sh --net=host forscan
-	make commit
 else
 	@echo $(MSG)
 	@docker run -e DISPLAY --device $(NO_DEVICE) -v $(shell pwd)/init.sh:/home/forscan/exec.sh --net=host forscan
-	make commit
 endif
+	make commit
 
 config:
 ifneq ("$(wildcard $(DEVICE))","")
-	@docker run --device $(DEVICE) -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
-	make commit
+	@docker run --device $(DEVICE) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
 else
 	@echo $(MSG)
-	@docker run --device $(NO_DEVICE) -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
-	make commit
+	@docker run --device $(NO_DEVICE) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
 endif
+	make commit
 
 run:
 ifneq ("$(wildcard $(DEVICE))","")
@@ -49,6 +52,11 @@ else
 	@echo $(MSG)
 	@docker run --rm --device $(NO_DEVICE) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
 endif
+
+update:
+	make fetch
+	@docker run --device $(NO_DEVICE) -v $(shell pwd)/install.sh:/home/forscan/exec.sh --net=host forscan
+	make commit
 
 commit:
 	docker commit $(CID) forscan

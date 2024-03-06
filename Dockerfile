@@ -15,9 +15,7 @@ RUN export uid=1000 gid=1000 && \
     chown ${uid}:${gid} -R /home/forscan && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /var/cache/* /usr/share/doc /usr/share/man
 
-# fetch forscan installer
 USER forscan
 ENV HOME /home/forscan
-RUN wget --no-check-certificate https://forscan.org/download/FORScanSetup2.3.59.release.exe -O /home/forscan/forscan_setup.exe
 
 ENTRYPOINT ["/home/forscan/exec.sh"]
