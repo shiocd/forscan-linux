@@ -16,11 +16,15 @@ NO_DEVICE=/dev/null
 MSG="WARN: device $(DEVICE) does not exist, using $(NO_DEVICE) as dummy device"
 
 all:
-	@echo "Use one of the targets: clean build init config run update"
+	@echo "Use one of the targets: clean build init winecfg config run update"
 	@echo
 
 build:
 	docker build -t forscan .
+
+winecfg:
+	@docker run -e DISPLAY -v $(shell pwd)/winecfg.sh:/home/forscan/exec.sh --net=host forscan
+	make commit
 
 fetch:
 	@docker run -e DISPLAY --device $(DEVICE) -v $(shell pwd)/fetch.sh:/home/forscan/exec.sh --net=host forscan

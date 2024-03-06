@@ -23,6 +23,7 @@ Docker to the rescue!
 4) if you need to override the OBD device, you can do it via ENV like so:
    `DEVICE=/dev/ttyACM0 make ...`
 
+
 ### Installation
 To run these commands, you need gnu make OS package.
 
@@ -43,6 +44,9 @@ To run these commands, you need gnu make OS package.
    * test that OBD connection works
  * when happy with all changes, close the program
  * all changes made will be saved
+
+**`make winecfg`**
+ * if you want to change font size or other wine settings
 
 
 ### Daily usage
