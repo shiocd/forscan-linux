@@ -6,14 +6,14 @@ $(shell ./xauth.sh)
 CID=$(shell docker ps -a -f ancestor=forscan -f status=exited -q | head -1)
 
 # OBD device unless defined by ENV
-ifndef DEVICE
-DEVICE=/dev/ttyUSB0
+ifndef DEV
+DEV=/dev/ttyUSB0
 endif
 
 # fallback OBD dummy device
-NO_DEVICE=/dev/null
+NO_DEV=/dev/null
 
-MSG="WARN: device $(DEVICE) does not exist, using $(NO_DEVICE) as dummy device"
+MSG="WARN: device $(DEV) does not exist, using $(NO_DEV) as dummy device"
 
 all:
 	@echo "Use one of the targets: clean build init winecfg config run update"
@@ -27,39 +27,39 @@ winecfg:
 	make commit
 
 fetch:
-	@docker run -e DISPLAY --device $(DEVICE) -v $(shell pwd)/fetch.sh:/home/forscan/exec.sh --net=host forscan
+	@docker run -e DISPLAY --device $(DEV) -v $(shell pwd)/fetch.sh:/home/forscan/exec.sh --net=host forscan
 	make commit
 
 init:
 	make fetch
-ifneq ("$(wildcard $(DEVICE))","")
-	@docker run -e DISPLAY --device $(DEVICE) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/init.sh:/home/forscan/exec.sh --net=host forscan
+ifneq ("$(wildcard $(DEV))","")
+	@docker run -e DISPLAY --device $(DEV) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/init.sh:/home/forscan/exec.sh --net=host forscan
 else
 	@echo $(MSG)
-	@docker run -e DISPLAY --device $(NO_DEVICE) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/init.sh:/home/forscan/exec.sh --net=host forscan
+	@docker run -e DISPLAY --device $(NO_DEV) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/init.sh:/home/forscan/exec.sh --net=host forscan
 endif
 	make commit
 
 config:
-ifneq ("$(wildcard $(DEVICE))","")
-	@docker run --device $(DEVICE) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
+ifneq ("$(wildcard $(DEV))","")
+	@docker run --device $(DEV) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
 else
 	@echo $(MSG)
-	@docker run --device $(NO_DEVICE) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
+	@docker run --device $(NO_DEV) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
 endif
 	make commit
 
 run:
-ifneq ("$(wildcard $(DEVICE))","")
-	@docker run --rm --device $(DEVICE) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
+ifneq ("$(wildcard $(DEV))","")
+	@docker run --rm --device $(DEV) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
 else
 	@echo $(MSG)
-	@docker run --rm --device $(NO_DEVICE) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
+	@docker run --rm --device $(NO_DEV) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
 endif
 
 update:
 	make fetch
-	@docker run --device $(NO_DEVICE) -v $(shell pwd)/install.sh:/home/forscan/exec.sh --net=host forscan
+	@docker run --device $(NO_DEV) -v $(shell pwd)/install.sh:/home/forscan/exec.sh --net=host forscan
 	make commit
 
 commit:

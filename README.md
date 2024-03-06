@@ -21,7 +21,7 @@ Docker to the rescue!
 2) plug in the OBD adapter, check that it shows up in dmesg/lsusb/dev (as /dev/ttyUSB0)
 3) install docker and ensure your user can run docker, user has to be member of the docker group
 4) if you need to override the OBD device, you can do it via ENV like so:
-   `DEVICE=/dev/ttyACM0 make ...`
+   `DEV=/dev/ttyACM0 make ...`
 
 
 ### Installation
