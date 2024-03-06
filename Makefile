@@ -29,10 +29,10 @@ fetch:
 init:
 	make fetch
 ifneq ("$(wildcard $(DEVICE))","")
-	@docker run -e DISPLAY --device $(DEVICE) -v $(shell pwd)/init.sh:/home/forscan/exec.sh --net=host forscan
+	@docker run -e DISPLAY --device $(DEVICE) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/init.sh:/home/forscan/exec.sh --net=host forscan
 else
 	@echo $(MSG)
-	@docker run -e DISPLAY --device $(NO_DEVICE) -v $(shell pwd)/init.sh:/home/forscan/exec.sh --net=host forscan
+	@docker run -e DISPLAY --device $(NO_DEVICE) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/init.sh:/home/forscan/exec.sh --net=host forscan
 endif
 	make commit
 
