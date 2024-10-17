@@ -15,56 +15,59 @@ NO_DEV=/dev/null
 
 MSG="WARN: device $(DEV) does not exist, using $(NO_DEV) as dummy device"
 
+# Can pass as env var or as make arg to use podman/other compatible CLI instead.
+CONTAINER_CLI ?= docker
+
 all:
 	@echo "Use one of the targets: clean build init winecfg config run update"
 	@echo
 
 build:
-	docker build -t forscan .
+	$(CONTAINER_CLI) build -t forscan .
 
 winecfg:
-	@docker run -e DISPLAY -v $(shell pwd)/winecfg.sh:/home/forscan/exec.sh --net=host forscan
+	@$(CONTAINER_CLI) run -e DISPLAY -v $(shell pwd)/winecfg.sh:/home/forscan/exec.sh --net=host forscan
 	make commit
 
 fetch:
-	@docker run -e DISPLAY --device $(DEV) -v $(shell pwd)/fetch.sh:/home/forscan/exec.sh --net=host forscan
+	@$(CONTAINER_CLI) run -e DISPLAY --device $(DEV) -v $(shell pwd)/fetch.sh:/home/forscan/exec.sh --net=host forscan
 	make commit
 
 init:
 	make fetch
 ifneq ("$(wildcard $(DEV))","")
-	@docker run -e DISPLAY --device $(DEV) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/init.sh:/home/forscan/exec.sh --net=host forscan
+	@$(CONTAINER_CLI) run -e DISPLAY --device $(DEV) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/init.sh:/home/forscan/exec.sh --net=host forscan
 else
 	@echo $(MSG)
-	@docker run -e DISPLAY --device $(NO_DEV) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/init.sh:/home/forscan/exec.sh --net=host forscan
+	@$(CONTAINER_CLI) run -e DISPLAY --device $(NO_DEV) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/init.sh:/home/forscan/exec.sh --net=host forscan
 endif
 	make commit
 
 config:
 ifneq ("$(wildcard $(DEV))","")
-	@docker run --device $(DEV) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
+	@$(CONTAINER_CLI) run --device $(DEV) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
 else
 	@echo $(MSG)
-	@docker run --device $(NO_DEV) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
+	@$(CONTAINER_CLI) run --device $(NO_DEV) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
 endif
 	make commit
 
 run:
 ifneq ("$(wildcard $(DEV))","")
-	@docker run --rm --device $(DEV) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
+	@$(CONTAINER_CLI) run --rm --device $(DEV) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
 else
 	@echo $(MSG)
-	@docker run --rm --device $(NO_DEV) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
+	@$(CONTAINER_CLI) run --rm --device $(NO_DEV) -v $(shell pwd)/shared:/home/forscan/FORScan -v $(shell pwd)/run.sh:/home/forscan/exec.sh --net=host forscan
 endif
 
 update:
 	make fetch
-	@docker run --device $(NO_DEV) -v $(shell pwd)/install.sh:/home/forscan/exec.sh --net=host forscan
+	@$(CONTAINER_CLI) run --device $(NO_DEV) -v $(shell pwd)/install.sh:/home/forscan/exec.sh --net=host forscan
 	make commit
 
 commit:
-	docker commit $(CID) forscan
-	docker rm $(CID)
+	$(CONTAINER_CLI) commit $(CID) forscan
+	$(CONTAINER_CLI) rm $(CID)
 
 clean:
-	docker rmi -f forscan
+	$(CONTAINER_CLI) rmi -f forscan
