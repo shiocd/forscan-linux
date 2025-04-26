@@ -30,7 +30,7 @@ winecfg:
 	make commit
 
 fetch:
-	@$(CONTAINER_CLI) run -e DISPLAY --device $(DEV) -v $(shell pwd)/fetch.sh:/home/forscan/exec.sh --net=host forscan
+	@$(CONTAINER_CLI) run -e DISPLAY --device $(NO_DEV) -v $(shell pwd)/fetch.sh:/home/forscan/exec.sh --net=host forscan
 	make commit
 
 init:
